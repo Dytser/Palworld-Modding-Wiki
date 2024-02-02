@@ -1,5 +1,8 @@
 Guide by: Dytser
 Research by: Lewdlad, Dytser, Francislouis, Realskies(youtube)
+### Minor NSFW warning
+In this page there will be references and discussion to breast physics and one small example shown of physics on a character model.
+
 # How does jiggle physics work?
 Jiggle physics in games are generally handled by a bone in the rig having physics attached to it, letting it move based on the momentum of the skeleton rather than any hardcoded/animated movement.
 
@@ -49,43 +52,52 @@ Import the file like normal, Select the physicsasset and skeleton if its already
 If you are unsure how to do that, Follow the instructions on
 [Packaging final mod file through UE5](https://pwmodding.wiki/docs/asset-swapping/PackagingInUE5)
 
-#### recommended step: Adding an animation 
+### Recommended step: Adding an animation 
 This step can be skipped if you don't care, It can help to have some idea of how the animation will play out in the game instead of exporting it and constantly packaging it. Rebooting the game and recooking each time.
 
 **Lets import an animation instead!**
 You can either
-* **A:** Make a custom animation, such as the rig moving up down and sideways quickly to show off movement and help you get an idea of how it will behave.
-* **B:** import an animation from the game.
+* **A:** Make a custom animation, such as the rig moving up down and sideways quickly to show off movement and help you get an idea of how it will behave.  
+* **B:** import an animation from the game.  
 
-for A:
-	Just make your animation in blender, If you need instructions on that then you can refer to  [First Steps in Blender Animation – A Comprehensive Tutorial](https://www.youtube.com/watch?v=PGvyBlgXHi8)
-For B:
-	In Fmodel you can navigate to 
-		Content/Pal/Animation
-	![[Pal Animation location.png]]
-	Now simply find the animation of which you want to use, For example human "AS_Player_Female_Jog_None" and right click. Choose "Save Animation"
-	![[Save Animation.png]]
-	Now if you go back to your blender project (you might want to save a copy just in case) you can now select your armature and then go to file>Import>Import PSA![[Import skeleton Anim.png]]
-	After your animation is imported, if you play, it should now play the animation.
-	You want to now go to the Dope Sheet by clicking the icon in the top right corner and changing this to the Dope Sheet.
-	While in the dope sheet you will likely be presented with keyframes all over the place, What you really only care about is the starting and end keyframes.
-	You can see in this image the animation i imported starts at 0 and ends at 45
-	Now change the starting and end frames in the bottom right of the dopesheet to match the animation. ![[Dopesheet.png]]
-	Now if you play your animation it should loop.
+for A:  
+Just make your animation in blender, If you need instructions on that then you can refer to  
+[First Steps in Blender Animation – A Comprehensive Tutorial](https://www.youtube.com/watch?v=PGvyBlgXHi8)  
+For B:  
+In Fmodel you can navigate to 
+Content/Pal/Animation  
+![Pal Animation location.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Pal%20Animation%20location.png)  
+Now simply find the animation of which you want to use, For example human "AS_Player_Female_Jog_None" and right click.  
+Choose "Save Animation"  
+![Save Animation.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Save%20Animation.png)  
+Now if you go back to your blender project (you might want to save a copy just in case) you can now select your armature and then go to  
+file>Import>Import PSA  
+![Import skeleton Anim.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Import%20skeleton%20Anim.png?raw=true)  
+After your animation is imported, if you play, it should now play the animation.  
 
-With your animation created and setup in blender to loop correctly, You want to select your model + armature like usual and export to FBX
+You want to now go to the Dope Sheet by clicking the icon in the top right corner and changing this to the Dope Sheet.  
+While in the dope sheet you will likely be presented with keyframes all over the place, What you really only care about is the starting and end keyframes.  
+You can see in the next image the animation I imported starts at 0 and ends at 45  
+Now change the starting and end frames in the bottom right of the dopesheet to match the animation.  
+![Dopesheet.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Dopesheet.png)  
+Now if you play your animation it should loop.
+With your animation created and setup in blender to loop correctly, You want to select your model + armature like usual and export to FBX  
+
 #### FBX settings for animations:
 Follow the usual FBX export settings. Such as turn off leaf bones etc
 
 And under **Bake Animation** 
 * turn off both **NLA Strips** as well as **All actions**
 * Make sure **Force Start/End Keyframes** and **Key All Bones** are toggled on
-![[Bake Animation Export settings.png]]
+  [Bake Animation Export settings.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Bake%20Animation%20Export%20settings.png?raw=true)  
 
+#### Importing The animation into Unreal
+You import the animation just like how you import any other model, Just put it somewhere and direct its skeleton etc the way you do the other files.
+I recommend naming them Anim that way you can easily find and know which files belong to the animations.
 
 ## creating and working with animation blueprint
-Right click your mesh in unreal. and go to **Create>Anim Blueprint** And name it whatever you want.
-![[Create ABP.png]]
+Right click your mesh in unreal. and go to **Create>Anim Blueprint** And name it whatever you want.  
+![Create ABP.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Create%20ABP.png)  
 This will create an Animation Blueprint next to your models skeleton file.
 Now you want to right click and add **Input pose** & **Spring Controller**
 
@@ -93,25 +105,26 @@ Attach the input pose into the spring controller and the spring controller into 
 Unreal will auto create **Local to Component** nodes and attach them as intended in your setup.
 Now you will want to give a spring controller for each physics bone you have.
 
-For example this is my setup for Breast physics on my current model.
-![[Breast physics example.png]]
+For example this is my setup for Breast physics on my current model.  
+![Breast physics example.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Breast%20physics%20example.png)  
 Remember that physics goes from left to right in this case. So you would want your first node to be the left one, In this case i have breast Parent as the first node in my setup and every node thereafter is the two breast nodes attached to the parent.
 The Left and Right breasts are not attached to each other so their order does not matter
 
 #### Compile
 After you make changes, you will need to compile these in Unreal Editor. Click either the green button on the preview window Or the Compile button in the upper left corner above your preview window.
-![[Compile Preview Button.png]]![[Compile button.png]]
+![Compile Preview Button.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Compile%20Preview%20Button.png) ![Compile button.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Compile%20button.png)  
 
 Its important that you have **Input pose** as the first node and it all going into **Output pose** as the output when you later cook your files.
 
 #### Loading an animation in the preview
-If you followed my recommended step and have an animation in unreal you can now right click and go to **Animation>Sequence>play "animationname"**
-![[Play Animation Name.png]]
+If you followed my recommended step and have an animation in unreal you can now right click and go to **Animation>Sequence>play "animationname"**  
+![Play Animation Name.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Play%20Animation%20Name.png)  
 
-Now simply attach it instead of the input pose into the load order and compile
-![[Loaded Animation Sequence.png]]
+Now simply attach it instead of the input pose into the load order and compile  
+![Loaded Animation Sequence.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Loaded%20Animation%20Sequence.png)  
 
-Now if you look in your preview window you should see an animation going!![[JigglePreviewGif.gif]]
+Now if you look in your preview window you should see an animation going!  
+![JigglePreviewGif.gif](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/JigglePreviewGif.gif)
 With this you should have SOME idea how it will work ingame, Do note it wont be 1:1 when you actually get it ingame.
 
 ### REMEMBER! 
@@ -120,7 +133,7 @@ With this you should have SOME idea how it will work ingame, Do note it wont be 
 Double click your model and scroll down past the **Mesh** Settings
 Find the **Skeletal Mesh** dropdown and open it.
 Inside you will find the option for **Post Process Anim Blueprint** Select your newly made ABP and save the model.
-![[Attaching the ABP.png]]
+![Attaching the ABP.png](https://github.com/Dytser/Palworld-Modding-Wiki/blob/main/JigglePhysics_Images/Attaching%20the%20ABP.png?raw=true)
 
 Congratulations you now have added Jiggle Physics to your model
 ### packaging the mod.
